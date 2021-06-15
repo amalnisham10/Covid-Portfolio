@@ -1,3 +1,43 @@
+
+
+-- Quesries used for tableau proj
+--1 taking death percentage--
+select sum(new_cases) as total_cases , sum( cast(new_deaths as int)) as total_deaths,
+	sum( cast(new_deaths as int))/sum(new_cases) * 100 as deathpercentage
+	from dbo.['Covid Death$']
+
+--2 removing/separating continents--
+select location, sum( cast(new_deaths as int)) as total_deaths
+from dbo.['Covid Death$']
+where  continent is null and location not IN ('European Union', 'World' , 'International')
+group by location
+order by location
+
+--3 taking cases by country without EU , World , keeping International Values for on air deaths
+
+select location, population, MAX( total_cases) as Highest_infected , MAX(total_cases/population)*100 as Pop_affected
+from dbo.['Covid Death$']
+where  continent is not null and location not IN ('European Union', 'World' )
+group by location , population
+order by Pop_affected desc
+
+--4 taking cases by date
+
+select location, date, population, MAX( total_cases) as Highest_infected , MAX(total_cases/population)*100 as Pop_affected
+from dbo.['Covid Death$']
+where  continent is not null and location not IN ('European Union', 'World' )
+group by location , population , date
+order by Pop_affected desc
+
+
+
+
+
+
+
+
+
+
 --Querying for different values /Exploring the data
 
 --select * from dbo.['Covid Death$']
